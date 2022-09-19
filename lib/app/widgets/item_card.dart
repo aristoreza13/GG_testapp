@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:testapp/app/widgets/widget.dart';
 
 class ItemCard extends StatelessWidget {
@@ -17,6 +18,26 @@ class ItemCard extends StatelessWidget {
         splashColor: Colors.blue.withAlpha(30),
         onTap: () {
           debugPrint('Card tapped.');
+        },
+        onLongPress: () {
+          debugPrint('Delete item tapped');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => Dialog(
+              child: Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const Text('Delete'),
+                    onTap: () {
+                      debugPrint('Deleted');
+                      Get.back();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
