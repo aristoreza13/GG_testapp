@@ -8,7 +8,9 @@ import 'package:testapp/app/widgets/widget.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({Key? key}) : super(key: key);
+  HomeView({Key? key}) : super(key: key);
+
+  final c = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,14 +27,52 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        children: const [
-          ItemCard(id: "1"),
-          ItemCard(id: "2"),
-          ItemCard(id: "3"),
-        ],
+      body:
+          // Center(
+          //   child: ElevatedButton(
+          //       onPressed: () {
+          //         var data = c.fetchData();
+          //         print(data);
+          //       },
+          //       child: Text('tapped')),
+          // )
+          FutureBuilder(
+        future: c.fetchData(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('Something went wrong'),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ItemCard(
+                  image: snapshot.data[index]['image'],
+                  title: snapshot.data[index]['title'],
+                  description: snapshot.data[index]['description'],
+                  price: snapshot.data[index]['price'],
+                  // rating: snapshot.data[index]['rating'],
+                );
+              },
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
+      // ListView(
+      //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      //   children: const [
+      //     ItemCard(id: "1"),
+      //     ItemCard(id: "2"),
+      //     ItemCard(id: "3"),
+      //   ],
+      // ),
     );
   }
 }
