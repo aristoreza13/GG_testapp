@@ -5,10 +5,18 @@ import 'package:testapp/app/widgets/widget.dart';
 class ItemCard extends StatelessWidget {
   const ItemCard({
     super.key,
-    required this.id,
+    required this.image,
+    required this.title,
+    required this.description,
+    required this.price,
+    // required this.rating,
   });
 
-  final String id;
+  final String image;
+  final String title;
+  final String description;
+  // final String rating;
+  final num price;
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +58,9 @@ class ItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Price
-                    const Text(
-                      '109.95',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(
+                      price.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 10,
@@ -60,7 +68,9 @@ class ItemCard extends StatelessWidget {
                     // Image
                     Expanded(
                       child: Image.network(
-                          "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"),
+                        image,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ],
                 ),
@@ -68,23 +78,24 @@ class ItemCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
-                      children: const [
+                      children: [
                         // Title
                         Text(
-                          "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          title,
+                          maxLines: 2,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         // Description
                         Text(
-                          "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+                          description,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 4,
+                          maxLines: 3,
                         ),
                         // Rating
-                        Align(
+                        const Align(
                             alignment: Alignment.bottomRight, child: Rating()),
                       ],
                     ),
