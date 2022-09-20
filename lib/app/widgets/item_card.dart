@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:testapp/app/controllers/controller.dart';
+import 'package:testapp/app/modules/home/controllers/home_controller.dart';
+import 'package:testapp/app/routes/app_pages.dart';
 import 'package:testapp/app/widgets/widget.dart';
 
 class ItemCard extends StatelessWidget {
-  const ItemCard({
+  ItemCard({
     super.key,
+    required this.id,
     required this.image,
     required this.title,
     required this.description,
     required this.price,
-    // required this.rating,
+    required this.rating,
   });
 
+  final int id;
   final String image;
   final String title;
   final String description;
-  // final String rating;
+  final String rating;
   final num price;
+
+  final c = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,26 +38,33 @@ class ItemCard extends StatelessWidget {
           debugPrint('Delete item tapped');
           showDialog(
             context: context,
-            builder: (BuildContext context) => Dialog(
-              child: Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text('Delete'),
-                    onTap: () {
-                      debugPrint('Deleted');
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Warning"),
+                content: const Text("Are you sure want to delete item?"),
+                actions: [
+                  TextButton(
+                    child: const Text("Yes"),
+                    onPressed: () {
+                      Controller().deleteItem(id);
+                      Get.back();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("No"),
+                    onPressed: () {
                       Get.back();
                     },
                   ),
                 ],
-              ),
-            ),
+              );
+            },
           );
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
-            width: 300,
+            width: 700,
             height: 150,
             child: Row(
               children: [
@@ -69,7 +83,8 @@ class ItemCard extends StatelessWidget {
                     Expanded(
                       child: Image.network(
                         image,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
+                        width: 100,
                       ),
                     ),
                   ],
@@ -78,6 +93,8 @@ class ItemCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Title
                         Text(
@@ -89,14 +106,20 @@ class ItemCard extends StatelessWidget {
                           height: 10,
                         ),
                         // Description
-                        Text(
-                          description,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
+                        Flexible(
+                          child: Text(
+                            description,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
                         ),
                         // Rating
-                        const Align(
-                            alignment: Alignment.bottomRight, child: Rating()),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Rating(
+                            rating: rating,
+                          ),
+                        ),
                       ],
                     ),
                   ),

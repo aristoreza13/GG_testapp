@@ -2,12 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:testapp/app/controllers/controller.dart';
+import 'package:testapp/app/data/item_model.dart';
 import 'package:testapp/app/routes/app_pages.dart';
 
 import '../controllers/add_item_controller.dart';
 
 class AddItemView extends GetView<AddItemController> {
-  const AddItemView({Key? key}) : super(key: key);
+  AddItemView({Key? key}) : super(key: key);
+
+  final c = Get.put(Controller());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,68 +22,64 @@ class AddItemView extends GetView<AddItemController> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: [
-          const TextField(
+          TextField(
             autocorrect: false,
-            // // controller: controller.nameC,
+            controller: c.idController,
             // maxLength: 16,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "ID",
               icon: Icon(Icons.numbers),
             ),
           ),
-          const TextField(
+          TextField(
             autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
+            controller: c.titleController,
+            decoration: const InputDecoration(
               labelText: "Item",
               icon: Icon(CupertinoIcons.cube),
             ),
           ),
-          const TextField(
+          TextField(
             autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
+            controller: c.priceController,
+            decoration: const InputDecoration(
               labelText: "Price",
               icon: Icon(CupertinoIcons.money_dollar),
             ),
           ),
-          const TextField(
+          TextField(
             autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
+            controller: c.descController,
+            decoration: const InputDecoration(
               labelText: "Description",
               icon: Icon(Icons.web),
             ),
           ),
-          const TextField(
+          TextField(
             autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
+            controller: c.categoryController,
+            decoration: const InputDecoration(
               labelText: "Category",
               icon: Icon(Icons.list),
             ),
           ),
-          const TextField(
+          TextField(
             autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
+            controller: c.imageController,
+            decoration: const InputDecoration(
               labelText: "Image",
               icon: Icon(Icons.image),
-            ),
-          ),
-          const TextField(
-            autocorrect: false,
-            // controller: controller.nameC,
-            decoration: InputDecoration(
-              labelText: "Rating",
-              icon: Icon(Icons.rate_review),
             ),
           ),
           const SizedBox(
             height: 20,
           ),
           ElevatedButton(
-              onPressed: () => Get.offAllNamed(Routes.HOME),
+              onPressed: () {
+                // c.createItem();
+                Controller().addItem();
+                Get.offAllNamed(Routes.HOME);
+              },
               child: const Text('Add Item')),
         ],
       ),
