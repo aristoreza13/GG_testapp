@@ -27,16 +27,7 @@ class HomeView extends GetView<HomeController> {
           ),
         ],
       ),
-      body:
-          // Center(
-          //   child: ElevatedButton(
-          //       onPressed: () {
-          //         var data = c.fetchData();
-          //         print(data);
-          //       },
-          //       child: Text('tapped')),
-          // )
-          FutureBuilder(
+      body: FutureBuilder(
         future: c.fetchData(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
@@ -55,7 +46,7 @@ class HomeView extends GetView<HomeController> {
                   title: snapshot.data[index]['title'],
                   description: snapshot.data[index]['description'],
                   price: snapshot.data[index]['price'],
-                  // rating: snapshot.data[index]['rating'],
+                  rating: snapshot.data[index]['rating']['rate'].toString(),
                 );
               },
             );
@@ -65,14 +56,6 @@ class HomeView extends GetView<HomeController> {
           );
         },
       ),
-      // ListView(
-      //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      //   children: const [
-      //     ItemCard(id: "1"),
-      //     ItemCard(id: "2"),
-      //     ItemCard(id: "3"),
-      //   ],
-      // ),
     );
   }
 }

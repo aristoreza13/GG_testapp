@@ -9,13 +9,13 @@ class ItemCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.price,
-    // required this.rating,
+    required this.rating,
   });
 
   final String image;
   final String title;
   final String description;
-  // final String rating;
+  final String rating;
   final num price;
 
   @override
@@ -50,7 +50,7 @@ class ItemCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: SizedBox(
-            width: 300,
+            width: 700,
             height: 150,
             child: Row(
               children: [
@@ -69,7 +69,8 @@ class ItemCard extends StatelessWidget {
                     Expanded(
                       child: Image.network(
                         image,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
+                        width: 100,
                       ),
                     ),
                   ],
@@ -78,6 +79,8 @@ class ItemCard extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Title
                         Text(
@@ -89,14 +92,20 @@ class ItemCard extends StatelessWidget {
                           height: 10,
                         ),
                         // Description
-                        Text(
-                          description,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
+                        Flexible(
+                          child: Text(
+                            description,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
                         ),
                         // Rating
-                        const Align(
-                            alignment: Alignment.bottomRight, child: Rating()),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Rating(
+                            rating: rating,
+                          ),
+                        ),
                       ],
                     ),
                   ),
