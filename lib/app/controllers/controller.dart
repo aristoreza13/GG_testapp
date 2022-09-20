@@ -1,44 +1,82 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Client;
 import 'package:testapp/app/data/item_model.dart';
 
 class Controller extends GetxController {
-  var itemList = <ItemModel>[].obs;
-  var isLoading = true.obs;
+  final baseUrl = Uri.parse("https://fakestoreapi.com/products");
+  Client client = Client();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
+  TextEditingController ratingController = TextEditingController();
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchItem();
+  Future<List<ItemModel>?> getItem() async {
+    final response = await client.get(baseUrl);
+    if (response.statusCode == 200) {
+      return itemModelFromJson(response.body);
+    } else {
+      return null;
+    }
   }
 
-  Future<void> fetchItem() async {
-    final response =
-        await http.get(Uri.parse("https://fakestoreapi.com/products"));
-
+  Future<String?> getDetailItem(int id) async {
+    final response = await client.get(baseUrl);
     if (response.statusCode == 200) {
-      ItemModel _itemModel = ItemModel.fromJson(
-        jsonDecode(response.body),
-      );
-
-      itemList.add(
-        ItemModel(
-          id: _itemModel.id,
-          title: _itemModel.title,
-          price: _itemModel.price,
-          description: _itemModel.description,
-          category: _itemModel.category,
-          image: _itemModel.image,
-          rating: _itemModel.rating,
-        ),
-      );
-
-      isLoading.value = true;
+      return response.body;
     } else {
-      Get.snackbar("Error loading data!",
-          "Server respond: ${response.statusCode}:${response.reasonPhrase.toString()}");
+      return null;
     }
+  }
+
+  Future<bool> deleteItem(int id) async {
+    final response = await client.delete(
+      baseUrl,
+      headers: {"content-type": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> createItem(ItemModel item) async {
+    final response = await client.post(
+      baseUrl,
+      headers: {"content-type": "application/json"},
+      body: itemModelToJson(item),
+    );
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void addItem() async {
+    int id = int.parse(idController.text);
+    String title = titleController.text.toString();
+    double price = double.parse(priceController.text);
+    String description = descController.text.toString();
+    String category = categoryController.text.toString();
+    String image = imageController.text.toString();
+    Rating rating = ratingController.text.toString() as Rating;
+
+    ItemModel itemModel = ItemModel(
+      id: id,
+      title: title,
+      price: price,
+      description: description,
+      category: category,
+      image: image,
+      rating: rating,
+    );
+    Controller().createItem(itemModel).then((value) => Get.back());
   }
 }

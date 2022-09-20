@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:testapp/app/controllers/controller.dart';
+import 'package:testapp/app/modules/home/controllers/home_controller.dart';
+import 'package:testapp/app/routes/app_pages.dart';
 import 'package:testapp/app/widgets/widget.dart';
 
 class ItemCard extends StatelessWidget {
-  const ItemCard({
+  ItemCard({
     super.key,
+    required this.id,
     required this.image,
     required this.title,
     required this.description,
@@ -12,11 +16,14 @@ class ItemCard extends StatelessWidget {
     required this.rating,
   });
 
+  final int id;
   final String image;
   final String title;
   final String description;
   final String rating;
   final num price;
+
+  final c = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +38,27 @@ class ItemCard extends StatelessWidget {
           debugPrint('Delete item tapped');
           showDialog(
             context: context,
-            builder: (BuildContext context) => Dialog(
-              child: Wrap(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.delete),
-                    title: const Text('Delete'),
-                    onTap: () {
-                      debugPrint('Deleted');
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Warning"),
+                content: const Text("Are you sure want to delete item?"),
+                actions: [
+                  TextButton(
+                    child: const Text("Yes"),
+                    onPressed: () {
+                      Controller().deleteItem(id);
+                      Get.back();
+                    },
+                  ),
+                  TextButton(
+                    child: const Text("No"),
+                    onPressed: () {
                       Get.back();
                     },
                   ),
                 ],
-              ),
-            ),
+              );
+            },
           );
         },
         child: Padding(

@@ -2,20 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:testapp/app/controllers/controller.dart';
+import 'package:testapp/app/data/item_model.dart';
 import 'package:testapp/app/routes/app_pages.dart';
 import 'package:testapp/app/widgets/widget.dart';
 
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  HomeView({Key? key}) : super(key: key);
+  const HomeView({Key? key}) : super(key: key);
 
-  final c = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HomeView'),
+        title: const Text('List Barang'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -28,7 +29,7 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       body: FutureBuilder(
-        future: c.fetchData(),
+        future: Controller().getItem(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -41,12 +42,14 @@ class HomeView extends GetView<HomeController> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
+                ItemModel items = snapshot.data[index];
                 return ItemCard(
-                  image: snapshot.data[index]['image'],
-                  title: snapshot.data[index]['title'],
-                  description: snapshot.data[index]['description'],
-                  price: snapshot.data[index]['price'],
-                  rating: snapshot.data[index]['rating']['rate'].toString(),
+                  id: items.id,
+                  image: items.image,
+                  title: items.title,
+                  description: items.description,
+                  price: items.price,
+                  rating: items.rating.rate.toString(),
                 );
               },
             );

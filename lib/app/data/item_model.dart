@@ -4,9 +4,15 @@
 
 import 'dart:convert';
 
-ItemModel itemModelFromJson(String str) => ItemModel.fromJson(json.decode(str));
+List<ItemModel> itemModelFromJson(String str) {
+  final data = json.decode(str);
+  return List<ItemModel>.from(data.map((item) => ItemModel.fromJson(item)));
+}
 
-String itemModelToJson(ItemModel data) => json.encode(data.toJson());
+String itemModelToJson(ItemModel data) {
+  final jsonData = data.toJson();
+  return json.encode(jsonData);
+}
 
 class ItemModel {
   ItemModel({
