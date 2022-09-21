@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:testapp/app/controllers/controller.dart';
 import 'package:testapp/app/modules/home/controllers/home_controller.dart';
-import 'package:testapp/app/routes/app_pages.dart';
 import 'package:testapp/app/widgets/widget.dart';
 
 class ItemCard extends StatelessWidget {

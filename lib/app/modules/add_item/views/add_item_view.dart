@@ -11,7 +11,14 @@ import '../controllers/add_item_controller.dart';
 class AddItemView extends GetView<AddItemController> {
   AddItemView({Key? key}) : super(key: key);
 
-  final c = Get.put(Controller());
+  TextEditingController idController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController imageController = TextEditingController();
+  TextEditingController ratingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +31,7 @@ class AddItemView extends GetView<AddItemController> {
         children: [
           TextField(
             autocorrect: false,
-            controller: c.idController,
+            controller: idController,
             // maxLength: 16,
             decoration: const InputDecoration(
               labelText: "ID",
@@ -33,7 +40,7 @@ class AddItemView extends GetView<AddItemController> {
           ),
           TextField(
             autocorrect: false,
-            controller: c.titleController,
+            controller: titleController,
             decoration: const InputDecoration(
               labelText: "Item",
               icon: Icon(CupertinoIcons.cube),
@@ -41,7 +48,7 @@ class AddItemView extends GetView<AddItemController> {
           ),
           TextField(
             autocorrect: false,
-            controller: c.priceController,
+            controller: priceController,
             decoration: const InputDecoration(
               labelText: "Price",
               icon: Icon(CupertinoIcons.money_dollar),
@@ -49,7 +56,7 @@ class AddItemView extends GetView<AddItemController> {
           ),
           TextField(
             autocorrect: false,
-            controller: c.descController,
+            controller: descController,
             decoration: const InputDecoration(
               labelText: "Description",
               icon: Icon(Icons.web),
@@ -57,7 +64,7 @@ class AddItemView extends GetView<AddItemController> {
           ),
           TextField(
             autocorrect: false,
-            controller: c.categoryController,
+            controller: categoryController,
             decoration: const InputDecoration(
               labelText: "Category",
               icon: Icon(Icons.list),
@@ -65,7 +72,7 @@ class AddItemView extends GetView<AddItemController> {
           ),
           TextField(
             autocorrect: false,
-            controller: c.imageController,
+            controller: imageController,
             decoration: const InputDecoration(
               labelText: "Image",
               icon: Icon(Icons.image),
@@ -76,8 +83,18 @@ class AddItemView extends GetView<AddItemController> {
           ),
           ElevatedButton(
               onPressed: () {
-                // c.createItem();
-                Controller().addItem();
+                Controller().createItem(
+                  ItemModel(
+                    id: int.parse(idController.text.toString()),
+                    title: titleController.text.toString(),
+                    price: double.parse(priceController.text.toString()),
+                    description: descController.text.toString(),
+                    category: categoryController.text.toString(),
+                    image: imageController.text.toString(),
+                    rating: Rating.fromJson(ratingController.text.toString()
+                        as Map<String, dynamic>),
+                  ),
+                );
                 Get.offAllNamed(Routes.HOME);
               },
               child: const Text('Add Item')),
