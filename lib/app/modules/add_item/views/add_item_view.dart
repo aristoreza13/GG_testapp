@@ -16,7 +16,7 @@ class AddItemView extends GetView<AddItemController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AddItemView'),
+        title: const Text('Add Item'),
         centerTitle: true,
       ),
       body: ListView(
