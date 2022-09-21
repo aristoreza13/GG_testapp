@@ -8,13 +8,6 @@ import 'package:testapp/app/data/item_model.dart';
 class Controller extends GetxController {
   final baseUrl = Uri.parse("https://fakestoreapi.com/products");
   Client client = Client();
-  TextEditingController titleController = TextEditingController();
-  TextEditingController idController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
-  TextEditingController descController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController imageController = TextEditingController();
-  TextEditingController ratingController = TextEditingController();
 
   Future<List<ItemModel>?> getItem() async {
     final response = await client.get(baseUrl);
@@ -25,58 +18,49 @@ class Controller extends GetxController {
     }
   }
 
-  Future<String?> getDetailItem(int id) async {
-    final response = await client.get(baseUrl);
+  Future<ItemModel> getDetailItem(int id) async {
+    final response =
+        await client.get(Uri.parse("https://fakestoreapi.com/products/$id"));
     if (response.statusCode == 200) {
-      return response.body;
+      return ItemModel.fromJson(json.decode(response.body));
     } else {
-      return null;
+      throw Exception('Failed to load item');
     }
   }
 
-  Future<bool> deleteItem(int id) async {
+  Future<void> deleteItem(int id) async {
     final response = await client.delete(
-      baseUrl,
-      headers: {"content-type": "application/json"},
+      Uri.parse("https://fakestoreapi.com/products/$id"),
     );
     if (response.statusCode == 200) {
-      return true;
+      print("Item deleted");
     } else {
-      return false;
+      throw "Failed to delete item";
     }
   }
 
-  Future<bool> createItem(ItemModel item) async {
+  Future<ItemModel> createItem(ItemModel itemModel) async {
+    Map data = {
+      'id': itemModel.id,
+      'title': itemModel.title,
+      'price': itemModel.price,
+      'description': itemModel.description,
+      'category': itemModel.category,
+      'image': itemModel.image,
+      'rating': itemModel.rating,
+    };
+
     final response = await client.post(
       baseUrl,
-      headers: {"content-type": "application/json"},
-      body: itemModelToJson(item),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
     );
-    if (response.statusCode == 201) {
-      return true;
+    if (response.statusCode == 200) {
+      return ItemModel.fromJson(json.decode(response.body));
     } else {
-      return false;
+      throw Exception('Failed to post item');
     }
-  }
-
-  void addItem() async {
-    int id = int.parse(idController.text);
-    String title = titleController.text.toString();
-    double price = double.parse(priceController.text);
-    String description = descController.text.toString();
-    String category = categoryController.text.toString();
-    String image = imageController.text.toString();
-    Rating rating = ratingController.text.toString() as Rating;
-
-    ItemModel itemModel = ItemModel(
-      id: id,
-      title: title,
-      price: price,
-      description: description,
-      category: category,
-      image: image,
-      rating: rating,
-    );
-    Controller().createItem(itemModel).then((value) => Get.back());
   }
 }
